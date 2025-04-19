@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pelacak Lokasi Gratis</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body { margin:0; padding:0; font-family: Arial; text-align: center; }
+    #map { height: 90vh; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <h2>Lokasi Kamu Saat Ini</h2>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    function showMap(lat, lon) {
+      var map = L.map('map').setView([lat, lon], 16);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker([lat, lon]).addTo(map)
+        .bindPopup("Kamu di sini!")
+        .openPopup();
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var lat = position.coords.latitude;
+          var lon = position.coords.longitude;
+          showMap(lat, lon);
+
+          // Kirim ke server kalau kamu punya backend
+          // fetch('https://yourserver.com/simpan', ...)
+        }, function() {
+          alert("Gagal mendapatkan lokasi.");
+        });
+      } else {
+        alert("Geolocation tidak didukung browser kamu.");
+      }
+    }
+
+    window.onload = getLocation;
+  </script>
+</body>
+</html>
